@@ -2,16 +2,6 @@
 
 Projeto de aplicativo web para exibir informações de times de futebol e estatísticas de jogadores. Desenvolvido com ASP.NET Core MVC e Razor Pages, o projeto oferece uma interface para visualizar detalhes de equipes, jogadores e suas estatísticas em tempo real.
 
-## 📋 Índice
-
-- [Descrição](#descrição)
-- [Funcionalidades](#funcionalidades)
-- [Tecnologias](#tecnologias)
-- [Pré-requisitos](#pré-requisitos)
-- [Configuração e Execução](#configuração-e-execução)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Contribuições](#contribuições)
-
 ## 📄 Descrição
 
 O **FootballTeamsApp** é um sistema web desenvolvido para mostrar dados de equipes e jogadores de futebol, incluindo estatísticas como partidas jogadas, gols, assistências, cartões, entre outros. O projeto foi criado com o objetivo de explorar o uso de ASP.NET Core MVC e Razor Pages, conectando-se a um banco de dados para gerenciar e exibir informações esportivas.
