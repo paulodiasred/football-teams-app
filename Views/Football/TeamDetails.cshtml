@@ -1,0 +1,135 @@
+@model FootballTeamsApp.Models.Team
+@{
+    Layout = null;
+}
+
+@functions {
+    private string TranslatePlayerType(string type)
+    {
+        switch (type)
+        {
+            case "Goalkeepers":
+                return "Goleiro";
+            case "Defenders":
+                return "Defensor";
+            case "Midfielders":
+                return "Meio-campista";
+            case "Forwards":
+                return "Atacante";
+            default:
+                return type; // Retorna o tipo original se não houver tradução
+        }
+    }
+}
+
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>@Model.team_name - Detalhes</title>
+    <link rel="icon" href="img/campo-de-futebol.png" type="image/png">
+    <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
+</head>
+
+<body>
+    <div class="back-button">
+        <button onclick="history.back()">Voltar</button>
+    </div>
+    <div class="main-content">
+        <div class="team-details-page">
+            <!-- Card principal com o logo do time e informações básicas -->
+            <div class="team-card-details">
+                <img src="@Model.team_badge" alt="@Model.team_name" class="team-logo" />
+                <h1>@Model.team_name</h1>
+                <p><strong>País:</strong> @Model.team_country</p>
+                <p><strong>Fundação:</strong> @Model.team_founded</p>
+            </div>
+
+            <div class="button-partidas">
+                <a href="@Url.Action("Matches", "Football", new { teamKey = Model.team_key })" class="btn btn-primary">
+                    Ver Partidas
+                </a>
+            </div>
+
+            <!-- Informações do Técnico -->
+            <div class="team-details coach">
+                <h2>Técnico</h2>
+                @if (Model.Coach != null)
+                {
+                    <p><strong>Nome:</strong> @Model.Coach.coach_name</p>
+                }
+                else
+                {
+                    <p>Técnico não disponível.</p>
+                }
+            </div>
+
+            <!-- Informações do Estádio (Venue) -->
+            <div class="team-details estadio">
+                <h2>Estádio</h2>
+                @if (Model.Venue != null)
+                {
+                    <p><strong>Nome:</strong> @Model.Venue.venue_name</p>
+                    <p><strong>Endereço:</strong> @Model.Venue.venue_address</p>
+                    <p><strong>Cidade:</strong> @Model.Venue.venue_city</p>
+                    <p><strong>Capacidade:</strong> @Model.Venue.venue_capacity</p>
+                    <p><strong>Superfície:</strong> @Model.Venue.venue_surface</p>
+                }
+                else
+                {
+                    <p>Estádio não disponível.</p>
+                }
+            </div>
+
+            <!-- Lista de Jogadores -->
+            <div class="team-info section">
+                <h2>Jogadores</h2>
+                <div class="conteiner-tabela">
+                    <table class="jogadores">
+                        <thead>
+                            <tr>
+                                <th>Foto</th>
+                                <th>Nome</th>
+                                <th>Número</th>
+                                <th>Posição</th>
+                                <th>Idade</th>
+                                <th>Gols</th>
+                                <th>Assistências</th>
+                                <th>Partidas Jogadas</th>
+                                <th>Jogador com Lesão?</th>
+                                <th>Cartões Amarelos</th>
+                                <th>Cartões Vermelhos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var player in Model.Players)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="@(string.IsNullOrEmpty(player.player_image) ? "/img/default-player.png" : player.player_image)"
+                                            alt="@player.player_name" width="50" height="50"
+                                            onerror="this.onerror=null;this.src='/img/default-player.png';">
+                                    </td>
+                                    <td>@player.player_name</td>
+                                    <td>@player.player_number</td>
+                                    <td>@player.player_type</td>
+                                    <td>@player.player_age</td>
+                                    <td class="highlight">@player.player_goals</td>
+                                    <td>@player.player_assists</td>
+                                    <td>@player.player_match_played</td>
+                                    <td>@player.player_injured</td>
+                                    <td>@player.player_yellow_cards</td>
+                                    <td>@player.player_red_cards</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,5 @@
+{
+    "appService.preDeployTask": "publish-release",
+    "appService.deploySubpath": "bin\\Release\\net8.0\\publish",
+    "appService.defaultWebAppToDeploy": "/subscriptions/97ab0893-db34-48b8-ab76-3e4199ae0f7b/resourceGroups/appsvc_windows_centralus/providers/Microsoft.Web/sites/footballteamsapp"
+}

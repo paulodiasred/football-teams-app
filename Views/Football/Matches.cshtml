@@ -1,0 +1,260 @@
+@using FootballTeamsApp.Models
+
+@model IEnumerable<FootballTeamsApp.Models.Match>
+@{
+    Layout = null;
+}
+
+@functions {
+    private string TranslateTerm(string term)
+    {
+        switch (term)
+        {
+            case "Throw In":
+                return "Lateral";
+            case "Free Kick":
+                return "Falta";
+            case "Goal Kick":
+                return "Tiro de Meta";
+            case "Penalty":
+                return "Pênalti";
+            case "Substitution":
+                return "Substituição";
+            case "Attacks":
+                return "Ataques";
+            case "Dangerous Attacks":
+                return "Ataques Perigosos";
+            case "On Target":
+                return "Chutes no Gol";
+            case "Off Target":
+                return "Chutes Fora";
+            case "Shots Total":
+                return "Total de Chutes";
+            case "Shots On Goal":
+                return "Chutes no Gol";
+            case "Shots Off Goal":
+                return "Chutes Fora do Gol";
+            case "Shots Blocked":
+                return "Chutes Bloqueados";
+            case "Shots Inside Box":
+                return "Chutes na Área";
+            case "Shots Outside Box":
+                return "Chutes de Fora da Área";
+            case "Fouls":
+                return "Faltas";
+            case "Corners":
+                return "Escanteios";
+            case "Offsides":
+                return "Impedimentos";
+            case "Ball Possession":
+                return "Posse de Bola";
+            case "Yellow Cards":
+                return "Cartões Amarelos";
+            case "Saves":
+                return "Defesas";
+            case "Passes Total":
+                return "Total de Passes";
+            case "Passes Accurate":
+                return "Passes Precisos";
+            case "1st Half":
+                return "1º Tempo";
+            case "2nd Half":
+                return "2º Tempo";
+            case "yellow card":
+                return "cartão amarelo";
+            case "red card":
+                return "cartão vermelho";
+            default:
+                return term; // Retorna o termo original se não houver tradução
+        }
+    }
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Partidas do @ViewBag.TeamName</title>
+    <link rel="icon" href="img/campo-de-futebol.png" type="image/png">
+    <link rel="stylesheet" href="~/css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        .toggle-button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+
+        .toggle-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Estilos para conteúdo escondido */
+        .collapsible-content {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .fixed-buttons {
+            position: sticky;
+            top: 0;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            z-index: 100;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="back-button">
+        <button onclick="history.back()">Voltar</button>
+        <a href="@Url.Action("Index", "Football")">
+            <button>Início</button>
+        </a>
+    </div>
+
+    <div class="main-content">
+        <div class="matches-container">
+            <h2>Partidas do @ViewBag.TeamName</h2>
+            <div class="matches-list">
+                @if (Model.Any())
+                {
+                    @foreach (var match in Model)
+                    {
+                        <div class="match-card">
+                            <div class="match-teams">
+                                <img src="@match.HomeTeamBadge" alt="@match.HomeTeam" class="team-badge">
+                                <span>
+                                    <h2>VS</h2>
+                                </span>
+                                <img src="@match.AwayTeamBadge" alt="@match.AwayTeam" class="team-badge">
+                            </div>
+                            <h2>@match.MatchDate - @match.HomeTeam vs @match.AwayTeam</h2>
+                            <h2>Placar: @match.HomeScore - @match.AwayScore</h2>
+                            <p>Estádio: @match.MatchStadium</p>
+                            <p>Árbitro da Partida: @match.MatchReferee</p>
+
+                            <!-- Contêiner de botões fixo -->
+                            <div class="fixed-buttons">
+                                <button class="toggle-button" data-target="#goals-@match.Id"
+                                    onclick="toggleContent(this)">Mostrar Gols</button>
+                                <button class="toggle-button" data-target="#cards-@match.Id"
+                                    onclick="toggleContent(this)">Mostrar Cartões</button>
+                                <button class="toggle-button" data-target="#stats-@match.Id"
+                                    onclick="toggleContent(this)">Estatísticas Gerais da Partida</button>
+                            </div>
+
+                            <!-- Seção de Gols -->
+                            <div id="goals-@match.Id" class="collapsible-content">
+                                <ul class="lista-gol">
+                                    @foreach (var goal in match.Goalscorers)
+                                    {
+                                        <li class="gol">
+                                            <strong>@goal.Time' - </strong>
+                                            @if (!string.IsNullOrEmpty(goal.HomeScorer))
+                                            {
+                                                <span>@goal.HomeScorer (Assistência: @goal.HomeAssist)</span>
+                                            }
+                                            else if (!string.IsNullOrEmpty(goal.AwayScorer))
+                                            {
+                                                <span>@goal.AwayScorer (Assistência: @goal.AwayAssist)</span>
+                                            }
+                                            <span> - Placar: @goal.Score (@TranslateTerm(goal.ScoreInfoTime))</span>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                            <!-- Seção de Cartões -->
+                            <div id="cards-@match.Id" class="collapsible-content">
+                                <ul class="lista-cartao">
+                                    @foreach (var card in match.Cards)
+                                    {
+                                        <li class="cartao">
+                                            <strong>@card.Time' - </strong>
+                                            @if (!string.IsNullOrEmpty(card.HomeFault))
+                                            {
+                                                <span>@card.HomeFault do @match.HomeTeam recebeu um @TranslateTerm(card.CardType)</span>
+                                            }
+                                            else if (!string.IsNullOrEmpty(card.AwayFault))
+                                            {
+                                                <span>@card.AwayFault do @match.AwayTeam recebeu um @TranslateTerm(card.CardType)</span>
+                                            }
+                                            @if (!string.IsNullOrEmpty(card.Info))
+                                            {
+                                                <span> - @card.Info</span>
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                            <!-- Seção de Estatísticas Gerais da Partida -->
+                            <div id="stats-@match.Id" class="collapsible-content">
+                                <table class="statistics-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo</th>
+                                            <th>@match.HomeTeam</th>
+                                            <th>@match.AwayTeam</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var stat in match.MatchStatistics)
+                                        {
+                                            <tr>
+                                                <td>@TranslateTerm(stat.Type)</td>
+                                                <td>@stat.Home</td>
+                                                <td>@stat.Away</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>Nenhuma partida encontrada para este time.</p>
+                }
+            </div>
+        </div>
+
+        <script>
+            // Função JavaScript para expandir/recolher conteúdo específico
+            function toggleContent(button) {
+                var targetId = button.getAttribute("data-target");
+                var content = document.querySelector(targetId);
+
+                if (!button.dataset.originalText) {
+                    button.dataset.originalText = button.textContent;
+                }
+
+                if (content.style.display === "none" || content.style.display === "") {
+                    content.style.display = "block";
+                    button.textContent = "Esconder " + button.dataset.originalText.replace("Mostrar ", "");
+                } else {
+                    content.style.display = "none";
+                    button.textContent = button.dataset.originalText;
+                }
+            }
+        </script>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+@model List<FootballTeamsApp.Models.TeamStanding>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Classificação do Campeonato Brasileiro - Série A</title>
+    <link rel="icon" href="img/campo-de-futebol.png" type="image/png">
+    <link rel="stylesheet" href="~/css/styles.css" />
+</head>
+
+<body>
+    <div class="top-banner">
+        <img src="img/paulao.png" alt="Banner do Campeonato do Paulão" />
+    </div>
+    <div class="container">
+        <h1>Classificação do Campeonato Brasileiro - Série A</h1>
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>Posição</th>
+                    <th>Time</th>
+                    <th>Jogos</th>
+                    <th>Vitórias</th>
+                    <th>Empates</th>
+                    <th>Derrotas</th>
+                    <th>Gols Pró</th>
+                    <th>Gols Contra</th>
+                    <th>Pontos</th>
+                    <th class="promocao">Destino na Temporada</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var team in Model)
+                {
+                    <tr>
+                        <td>@team.OverallLeaguePosition</td> <!-- Substituição correta -->
+                        <td class="nome-escudo">
+                            <a href="@Url.Action("TeamDetails", "Football", new { teamId = team.TeamId })">
+                                <img src="@team.TeamBadge" alt="@team.TeamName" style="width: 20px; height: 20px;" />
+                                @team.TeamName
+                            </a>
+                        </td>
+                        <td>@team.OverallLeaguePlayed</td> <!-- Substituição correta -->
+                        <td>@team.OverallLeagueWins</td> <!-- Substituição correta -->
+                        <td>@team.OverallLeagueDraws</td> <!-- Substituição correta -->
+                        <td>@team.OverallLeagueLosses</td> <!-- Substituição correta -->
+                        <td>@team.OverallLeagueGoalsFor</td> <!-- Substituição correta -->
+                        <td>@team.OverallLeagueGoalsAgainst</td> <!-- Substituição correta -->
+                        <td>@team.OverallLeaguePoints</td> <!-- Substituição correta -->
+                        <td class="promotion">
+                            @{
+                                var promotionText = team.OverallPromotion;
+                                if (promotionText == "CONMEBOL Libertadores")
+                                {
+                                    promotionText = "Libertadores";
+                                }
+                                else if (promotionText == "CONMEBOL Libertadores Qualifiers")
+                                {
+                                    promotionText = "Libertadores (Classificação)";
+                                }
+                                else if (promotionText == "CONMEBOL Sudamericana")
+                                {
+                                    promotionText = "Copa Sul-Americana";
+                                }
+                                else if (promotionText == "CONMEBOL Sudamericana Group Stage")
+                                {
+                                    promotionText = "Copa Sul-Americana (Fase de Grupos)";
+                                }
+                                else if (promotionText == "Relegation")
+                                {
+                                    promotionText = "Rebaixamento";
+                                }
+                            }
+                            @promotionText
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

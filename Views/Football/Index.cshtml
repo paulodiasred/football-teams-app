@@ -1,0 +1,58 @@
+@model IEnumerable<FootballTeamsApp.Models.Team>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Brasileirão Série A</title>
+    <link rel="icon" href="img/campo-de-futebol.png" type="image/png">
+    <link rel="stylesheet" href="~/css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="team-grid">
+            @foreach (var team in Model)
+            {
+                <div class="team-card">
+                    <h3>@team.team_name</h3>
+                    <img src="@team.team_badge" alt="@team.team_name" />
+                    <a href="@Url.Action("TeamDetails", "Football", new { teamId = team.Id })">
+                        Equipe
+                    </a>
+                    <a href="@Url.Action("Matches", "Football", new { teamKey = team.team_key })">
+                        Jogos
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script>
+        async function showMatches(teamKey) {
+            try {
+                const response = await fetch(`/Football/Matches?teamKey=${teamKey}`);
+                if (response.ok) {
+                    const matches = await response.text();
+                    document.getElementById('matches-list').innerHTML = matches;
+                    document.getElementById('matches-container').classList.remove('hidden');
+                } else {
+                    console.error(`Erro ao buscar as partidas: ${response.status}`);
+                }
+            } catch (error) {
+                console.error(`Erro na requisição: ${error}`);
+            }
+        }
+    </script>
+</body>
+
+</html>
